@@ -9,7 +9,7 @@ from scenario.base_scenario import BaseScenario
 
 class DemoScenario(BaseScenario):
 
-    # 定义场景执行的编排队列
+    """ Define the module queue for scenario execution """
     module_list = ('module1', 'module2',)
 
     

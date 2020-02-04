@@ -10,17 +10,21 @@ from module.base_module import BaseModule
 
 class Module1(BaseModule):
 
+    """ action arrangement """
     function_list = ('test_action_a', 'test_action_b',)
 
+    """ context include args and pre module """
     context_attr_list = ('id',)
 
     order_id = 0
 
     def test_action_a(self):
         self.logger.info("外部传参id=%s" % self.id)
+        # assert case
         assert self.id >0, "id数据传递不合法"
 
     def test_action_b(self):
+        """ context next module """
         self.order_id = 122
         pass
 
