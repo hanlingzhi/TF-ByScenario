@@ -1,9 +1,9 @@
 __author__ = 'hanlingzhi'
 
-'''
+"""
 create_date: 2019.12.5
-usage: 程序主入口
-'''
+usage: main
+"""
 
 import argparse, ast, os
 
@@ -17,10 +17,11 @@ from schedule import Schedule
 class SceneAction(argparse.Action):
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
         if nargs is not None:
-            raise ValueError("nargs not allowed")
+            raise ValueError("args not allowed")
         super(SceneAction, self).__init__(option_strings, dest, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
+        """ scenario exists in $PROJECT/scenario/$name.py """
         path = os.path.join(os.getcwd(), CONST.SCENARIO_PATH)
         scene_list = [f.split('.')[0] for f in list(filter(lambda x: str(x).endswith(".py"), os.listdir(path)))]
         if values not in scene_list:
