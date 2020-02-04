@@ -1,9 +1,9 @@
 __author__ = 'hanlingzhi'
 
-'''
+"""
 create_date: 2019.12.5
-usage: 调度器
-'''
+usage: schedule
+"""
 
 import traceback
 import importlib
@@ -45,7 +45,7 @@ class Schedule(object):
         self.show_attr()
         for i in range(0, self.count):
             r = self.retry
-            self.logger.info("执行 {} 场景构造第{}次 ...".format(self.scenario_name, i + 1))
+            self.logger.info("执行 {} 场景第{}次 ...".format(self.scenario_name, i + 1))
             while r >= 0:
                 if not self.is_pass:
                     self.logger.warning("执行 {} 场景出错, 重试第{}次 ...".format(self.scenario_name, self.retry - r))
@@ -58,6 +58,7 @@ class Schedule(object):
                     if self.is_pass:
                         break
                 except Exception as e:
+                    # catch exception to retry
                     traceback.print_exc()
                     self.is_pass = False
                     self.result = "{}\n({}) {}".format(self.result, i + 1, str(e))
@@ -76,11 +77,15 @@ class Schedule(object):
         cls_members = inspect.getmembers(module, inspect.isclass)
         for (name, _) in cls_members:
             c = getattr(module, name)
+            # check inherit and new instance
             if c.__base__.__name__ == "BaseScenario":
                 self.logger.debug("加载场景类 %s.%s" % (module_name, c.__name__))
                 self.scenario_instance = c(self.id, self.logger)
+            else:
+                del c
 
     def finish_call_back(self):
         if self.is_finish:
-            # 添加处理结果, 完成上报
+            self.logger.info("ci = {}".format(self.ci))
+            # upload report
             self.logger.info("调度器上报结果 结果 {} ...".format(self.result))
