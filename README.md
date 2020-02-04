@@ -52,7 +52,7 @@ optional arguments:
 * 本地调式的例子:
 <pre>python3 run.py --name demo_scenario --args "{'id':2}" -d </pre>
 * CI集成的例子:
-<pre>python3 run.py --name demo_scenario --args "{'id':2}" --count=1 -r 0 --ci "{'plat_id':'45' ...}"</pre>
+<pre>python3 run.py --name demo_scenario --args "{'id':2}" --count 1 -r 0 --ci "{'plat_id':'45' ...}"</pre>
 
 # 注意事项
 * module开发必须在module目录下, 且一定要继承 BaseModule
@@ -61,17 +61,17 @@ optional arguments:
 
 # module上下文传递
 提供两种方式：
-* (1) 每个场景都有独立的全局变量域，args_dict_{uuid}，可以将上下文放在全局变量中保存。
-* (2) 每个module会获取上一个(无法追溯更早)module的上文实例属性，需要设置可继承的context_attr_list('属性1','属性2')的属性列表，然后可以在module中通过self.属性1 访问。
+* (1) 每个场景都有独立的全局变量域，args_dict_{uuid}，可以将单场景的全局变量保存其中。
+* (2) 每个module会获取前一个(无法追溯更早)module的上文实例属性，需要设置可继承的context_attr_list('属性1','属性2')的属性列表，然后可以在module中通过self.属性1 访问。
 如果要传递给下文，一定要赋值到当前实例属性中。
 
 # sensor
-module提供了sensor的方法, 每一个module需要override.
+module提供了sensor的方法, 每一个module需要override
 <pre>
     # 定义自检程序
     def sensor(self):
-        return True/False, "返回的结果文案")
+        return True/False, "返回的结果文案"
 </pre>
 sensor的作用：
-* (1) 每个module的切点结果自检, 有些场景不会抛异常, 但是结果已经不对了. 除了被动的捕获异常,也需要主动的sensor检测。
-* (2) 每个module的最终返回结果定义, 可以在回调源头进行展示。
+* (1) module结果自检, 有些场景不会抛异常, 但是结果已经不对了。除了被动的捕获异常, 也需要主动的检测。
+* (2) module的最终返回结果定义文案, 会在回调返回中进行展示。
